@@ -60,7 +60,7 @@ st.markdown("## 🏥 Health of Job Data Collection")
 col1, col2, col3 = st.columns(3)
 col1.metric("Jobs Last Updated", update_time, update_date, delta_color="off")
 col2.metric("Jobs Added in Update", jobs_today, f"{jobs_delta}%")
-col3.metric("Jobs Database Size", num_jobs, f"{jobs_all_delta}%") # Calculate % increase
+col3.metric("Size of Jobs Database", num_jobs, f"{jobs_all_delta}%") # Calculate % increase
 
 
 st.write(f"#### 📈 Daily job scraping status")
