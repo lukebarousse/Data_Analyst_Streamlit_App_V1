@@ -85,8 +85,8 @@ skill_all_time_list = list(skill_all_time.keywords)
 
 # All time line chart
 all_time_chart = alt.Chart(skill_all_time).mark_bar(
-    cornerRadiusTopLeft=5,
-    cornerRadiusTopRight=5    
+    cornerRadiusTopLeft=10,
+    cornerRadiusTopRight=10    
 ).encode(
     x=alt.X('keywords', sort=None, title="", axis=alt.Axis(labelFontSize=20) ),
     y=alt.Y('percentage', title="Likelyhood to be in Job Posting", axis=alt.Axis(format='%', labelFontSize=17, titleFontSize=17)),

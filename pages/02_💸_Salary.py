@@ -74,10 +74,10 @@ salary_df[salary_column] = salary_df[salary_column].astype(int)
 
 try: 
     salary_chart = alt.Chart(salary_df).mark_bar(
-        cornerRadiusTopLeft=5,
-        cornerRadiusTopRight=5    
+        cornerRadiusTopLeft=10,
+        cornerRadiusTopRight=10    
     ).encode(
-        x=alt.X(salary_column, title="Salary", axis=alt.Axis(format='$,f', labelFontSize=20, titleFontSize=17), bin = alt.BinParams(maxbins = 40)),
+        x=alt.X(salary_column, title="Salary", axis=alt.Axis(format='$,f', labelFontSize=20, titleFontSize=17), bin = alt.BinParams(maxbins = 20)), # bins = len(salary_df[salary_column])/4
         y=alt.Y('count()', title="Count of Job Postings", axis=alt.Axis(labelFontSize=17, titleFontSize=17)),
     )
     st.altair_chart(salary_chart, use_container_width=True)
