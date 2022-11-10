@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import altair as alt
 import datetime
 
 st.set_page_config(page_title='💸 Salary', page_icon = 'images/luke_Favicon.png')
@@ -68,13 +69,18 @@ salary_df = salary_df[salary_df[salary_column].notna()]
 salary_df[salary_column] = salary_df[salary_column].astype(int)
 
 # Final visualizations
+
+
+
 try: 
-    range = (np.nanmin(column), np.nanmax(column))
-    hist_values = np.histogram(column, bins=bins, range=range)
-    hist_values = pd.DataFrame(hist_values).fillna(0).transpose()
-    hist_values = hist_values.rename(columns={0: "Count", 1: "Salary ($USD)"})
-    hist_values = hist_values.astype(int)
-    st.bar_chart(data=hist_values, x='Salary ($USD)', y='Count')
+    salary_chart = alt.Chart(salary_df).mark_bar(
+        cornerRadiusTopLeft=5,
+        cornerRadiusTopRight=5    
+    ).encode(
+        x=alt.X(salary_column, title="Salary", axis=alt.Axis(format='$,f', labelFontSize=20, titleFontSize=17), bin = alt.BinParams(maxbins = 40)),
+        y=alt.Y('count()', title="Count of Job Postings", axis=alt.Axis(labelFontSize=17, titleFontSize=17)),
+    )
+    st.altair_chart(salary_chart, use_container_width=True)
     st.markdown("#### 💵 Table of Salaries")
     st.dataframe(salary_df)
     if salary_choice == list(salary_dict.keys())[0]:
@@ -82,4 +88,10 @@ try:
 except:
     st.markdown("# 🙅‍♂️ No results")
 
-
+# Previous streamlit graph... didn't like look of axis and didn't support histogram
+# range = (np.nanmin(column), np.nanmax(column))
+# hist_values = np.histogram(column, bins=bins, range=range)
+# hist_values = pd.DataFrame(hist_values).fillna(0).transpose()
+# hist_values = hist_values.rename(columns={0: "Count", 1: "Salary ($USD)"})
+# hist_values = hist_values.astype(int)
+# st.bar_chart(data=hist_values, x='Salary ($USD)', y='Count')
