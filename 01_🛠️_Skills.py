@@ -137,7 +137,6 @@ else:
 # ax.bar(x="keywords", height="percentage", data=skill_updated.head(10) , color=color).xticks(rotation = 45, ha='right')
 # st.pyplot(fig)
 
-
 ##########
 # Footer #                         #  https://discuss.streamlit.io/t/st-footer/6447
 ##########
@@ -186,7 +185,7 @@ def layout(*args):
 
 def footer():
     myargs = [
-        link("https://serpapi.com/", image('https://github.com/lukebarousse/Data_Analyst_Streamlit_App_V1/raw/main/images/SerpApi_v2.png',)),
+        link("https://serpapi.com/", image('https://github.com/lukebarousse/Data_Analyst_Streamlit_App_V1/raw/main/images/SerpApi_V2.png',)),
     ]
     layout(*myargs)
 
