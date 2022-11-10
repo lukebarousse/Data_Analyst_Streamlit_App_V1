@@ -52,13 +52,9 @@ jobs_all_delta = jobs_all_delta.round(1)
 
 # Date Display:
 update_date = jobs_all.date_time.max()
-if update_date == datetime.date.today():
-    update_time = update_date.strftime("%H:%M")
-    update_time = f"{update_time} UTC"
-    update_date = update_date.strftime("%d-%m-%Y")
-else:
-    jobs_updated = update_date.strftime("%H:%M %d-%m-%Y")
-last_update = "yeah"
+update_time = update_date.strftime("%H:%M")
+update_time = f"{update_time} UTC"
+update_date = update_date.strftime("%d-%b-%Y")
 
 st.markdown("## 🏥 Health of Job Data Collection")
 col1, col2, col3 = st.columns(3)
