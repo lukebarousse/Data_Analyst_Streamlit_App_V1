@@ -186,7 +186,7 @@ def layout(*args):
 
 def footer():
     myargs = [
-        link("https://serpapi.com/", image('https://github.com/lukebarousse/Data_Analyst_Streamlit_App_V1/raw/main/images/SerpApi_v1.png',)),
+        link("https://serpapi.com/", image('https://github.com/lukebarousse/Data_Analyst_Streamlit_App_V1/raw/main/images/SerpApi_v2.png',)),
     ]
     layout(*myargs)
 
