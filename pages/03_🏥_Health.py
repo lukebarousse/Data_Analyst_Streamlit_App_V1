@@ -50,13 +50,24 @@ jobs_yesterday = num_jobs - jobs_today
 jobs_all_delta = ((num_jobs - jobs_yesterday) * 100) / jobs_yesterday
 jobs_all_delta = jobs_all_delta.round(1)
 
+# Date Display:
+update_date = jobs_all.date_time.max()
+if update_date == datetime.date.today():
+    update_time = update_date.strftime("%H:%M")
+    update_time = f"{update_time} UTC"
+    update_date = update_date.strftime("%d-%m-%Y")
+else:
+    jobs_updated = update_date.strftime("%H:%M %d-%m-%Y")
+last_update = "yeah"
+
 st.markdown("## 🏥 Health of Job Data Collection")
 col1, col2, col3 = st.columns(3)
-col1.metric("Jobs Database Size", num_jobs, f"{jobs_all_delta}%") # Calculate % increase
-col2.metric("Jobs Added Today", jobs_today, f"{jobs_delta}%")
-col3.metric("Missing Days", repeat_jobs, "0%", delta_color="off")
+col1.metric("Jobs Last Updated", update_time, update_date, delta_color="off")
+col2.metric("Jobs Added in Update", jobs_today, f"{jobs_delta}%")
+col3.metric("Jobs Database Size", num_jobs, f"{jobs_all_delta}%") # Calculate % increase
 
-st.write(f"#### 📈 Job scrapes per day")
+
+st.write(f"#### 📈 Daily job scraping status")
 st.line_chart(jobs_daily,x='Date',  y='Job Postings')
 st.write(f"📆 Collecting data for {delta_days} days now since {first_date}... \n")
 if len(missing_dates) > 0:
