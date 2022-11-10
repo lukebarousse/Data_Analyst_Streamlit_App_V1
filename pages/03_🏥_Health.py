@@ -37,8 +37,12 @@ jobs_daily = jobs_daily.sort_values(by='Date', ascending=False)
 delta_days = (today_date - (first_date - datetime.timedelta(days=2))).days # first day was actually day prior but UTC
 jobs_day = round(len(jobs_all)/delta_days)
 jobs_today = jobs_daily[jobs_daily.Date == datetime.date.today()]
-jobs_today = jobs_today['Job Postings'].fillna(0).iloc[0]
-jobs_delta = 100 * (jobs_day - jobs_today) / jobs_day
+try:
+    jobs_today = jobs_today['Job Postings'].fillna(0).iloc[0]
+except IndexError: #Error when coming to new day and no values for new day
+    jobs_today = jobs_daily[jobs_daily.Date == datetime.date.today() - datetime.timedelta(days=1)]
+    jobs_today = jobs_today['Job Postings'].fillna(0).iloc[0]
+jobs_delta = 100 * (jobs_today - jobs_day) / jobs_day
 jobs_delta = jobs_delta.round(1)
 
 # calculate database size yesterday to today
@@ -49,7 +53,7 @@ jobs_all_delta = jobs_all_delta.round(1)
 st.markdown("## 🏥 Health of Job Data Collection")
 col1, col2, col3 = st.columns(3)
 col1.metric("Jobs Database Size", num_jobs, f"{jobs_all_delta}%") # Calculate % increase
-col2.metric("Jobs Added Today", jobs_day, f"{jobs_delta}%")
+col2.metric("Jobs Added Today", jobs_today, f"{jobs_delta}%")
 col3.metric("Missing Days", repeat_jobs, "0%", delta_color="off")
 
 st.write(f"#### 📈 Job scrapes per day")

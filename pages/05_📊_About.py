@@ -24,16 +24,16 @@ Thanks to [SerpAPI](https://serpapi.com/) for providing the resources to pull th
 st.header("🔗 Links")
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.markdown("### [GitHub](https://github.com/lukebarousse)")
-    st.image('images/octocat.png', width=150)
+    st.markdown("### [GitHub](https://github.com/lukebarousse/Data_Analyst_Streamlit_App_V1)")
+    # st.image('images/octocat.png', width=150)
     st.write("Source code for project")
 
 with col2:
     st.markdown("### [Kaggle](https://www.kaggle.com/datasets/lukebarousse/data-analyst-job-postings-google-search)")
-    st.image('images/kaggle.png', width=125)
+    # st.image('images/kaggle.png', width=125)
     st.write("Dataset with further details")
 
 with col3:
     st.markdown("### [YouTube](https://www.youtube.com/lukebarousse)")
-    st.image('images/youtube.png', width=170)   
+    # st.image('images/youtube.png', width=170)   
     st.write("Video about this project")
