@@ -1,0 +1,3 @@
+# 🤓 Data Analyst Job Post Analyzer v.1.0
+What up, data nerds! This is my repo for my streamlit dashboard. [Check it out here.]()
+![dashboard](/images/dashboard.png)
