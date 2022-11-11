@@ -123,33 +123,64 @@ skill_daily_data = agg_skill_daily_data(jobs_all)
 skill_daily_data = skill_daily_data[skill_daily_data.keywords.isin(skill_all_time_list)]
 
 # Daily trend line chart
+source = skill_daily_data
+x = 'date'
+y = 'percentage'
+color = 'keywords'
 selector = alt.selection_single(encodings=['x', 'y'])
-daily_trend_chart = alt.Chart(skill_daily_data).mark_line().encode(
-    x=alt.X('date', title=""),
-    y=alt.Y('percentage', title="Likelyhood to be in Job Posting", axis=alt.Axis(format='%', labelFontSize=17, titleFontSize=17)),
-    # color='keywords',
-    strokeDash='keywords',
-    color=alt.condition(selector, 'keywords', alt.value('lightgray')),
-    tooltip=["keywords", alt.Tooltip("percentage", format=".1%"), "date"]
-).add_selection(
-    selector
-).configure_view(
-    strokeWidth=0
+hover = alt.selection_single(
+    fields=[x],
+    nearest=True,
+    on="mouseover",
+    empty="none",
 )
+lines = (
+    alt.Chart(source)
+    .mark_line(point="transparent")
+    .encode(x=alt.X(x, title="Date", axis=alt.Axis(labelFontSize=15, titleFontSize=17)), 
+        y=alt.Y(y, title="Likelyhood to be in Job Posting", 
+        axis=alt.Axis(format='%', labelFontSize=17, titleFontSize=17)), 
+        color=color) # Modified this
+    .transform_calculate(color='datum.delta < 0 ? "red" : "lightblue"') # doesn't show red for negative delta
+)
+points = (
+    lines.transform_filter(hover)
+    .mark_circle(size=65)
+    .encode(color=alt.Color("color:N", scale=None))
+)
+tooltips = (
+    alt.Chart(source)
+    .mark_rule(opacity=0)
+    .encode(
+        x=x,
+        y=y,
+        tooltip=[color, alt.Tooltip(y, format=".1%"), x],
+    )
+    .add_selection(hover)
+)
+daily_trend_chart = (lines + points + tooltips).interactive().configure_view(strokeWidth=0)
 
 if graph_choice == graph_list[0]:
     st.altair_chart(all_time_chart, use_container_width=True)
 else:
     st.altair_chart(daily_trend_chart, use_container_width=True)
 
-# Streamlit chart fail... can't sort
-# st.bar_chart(data=skill_updated.head(10), x='keywords', y='percentage')
+# Previous Daily Trend Chart
+# selector = alt.selection_single(encodings=['x', 'y'])
+# daily_trend_chart = alt.Chart(skill_daily_data).mark_line().encode(
+#     x=alt.X('date', title=""),
+#     y=alt.Y('percentage', title="Likelyhood to be in Job Posting", axis=alt.Axis(format='%', labelFontSize=17, titleFontSize=17)),
+#     strokeDash='keywords',
+#     color=alt.condition(selector, 'keywords', alt.value('lightgray')),
+#     tooltip=["keywords", alt.Tooltip("percentage", format=".1%"), "date"]
+# ).add_selection(
+#     selector
+# ).configure_view(
+#     strokeWidth=0
+# )
 
-# Matplotlib fail... too complicated
-# fig, ax = plt.subplots()
-# color = np.random.rand(len(skill_updated.keywords), 3)
-# ax.bar(x="keywords", height="percentage", data=skill_updated.head(10) , color=color).xticks(rotation = 45, ha='right')
-# st.pyplot(fig)
+
+
 
 ##########
 # Footer #                         #  https://discuss.streamlit.io/t/st-footer/6447
