@@ -84,12 +84,19 @@ skill_all_time = skill_all_time.head(skill_filter)
 skill_all_time_list = list(skill_all_time.keywords)
 
 # All time line chart
+selector = alt.selection_single(encodings=['x', 'y'])
 all_time_chart = alt.Chart(skill_all_time).mark_bar(
     cornerRadiusTopLeft=10,
     cornerRadiusTopRight=10    
 ).encode(
     x=alt.X('keywords', sort=None, title="", axis=alt.Axis(labelFontSize=20) ),
     y=alt.Y('percentage', title="Likelyhood to be in Job Posting", axis=alt.Axis(format='%', labelFontSize=17, titleFontSize=17)),
+    color=alt.condition(selector, 'percentage', alt.value('lightgray'), legend=None),
+    tooltip=["keywords", alt.Tooltip("percentage", format=".1%")]
+).add_selection(
+    selector
+).configure_view(
+    strokeWidth=0
 )
 
 # Aggregate skills daily
@@ -116,11 +123,18 @@ skill_daily_data = agg_skill_daily_data(jobs_all)
 skill_daily_data = skill_daily_data[skill_daily_data.keywords.isin(skill_all_time_list)]
 
 # Daily trend line chart
+selector = alt.selection_single(encodings=['x', 'y'])
 daily_trend_chart = alt.Chart(skill_daily_data).mark_line().encode(
     x=alt.X('date', title=""),
     y=alt.Y('percentage', title="Likelyhood to be in Job Posting", axis=alt.Axis(format='%', labelFontSize=17, titleFontSize=17)),
-    color='keywords',
+    # color='keywords',
     strokeDash='keywords',
+    color=alt.condition(selector, 'keywords', alt.value('lightgray')),
+    tooltip=["keywords", alt.Tooltip("percentage", format=".1%"), "date"]
+).add_selection(
+    selector
+).configure_view(
+    strokeWidth=0
 )
 
 if graph_choice == graph_list[0]:
