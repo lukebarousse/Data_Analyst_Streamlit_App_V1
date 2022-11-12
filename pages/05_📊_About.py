@@ -7,18 +7,11 @@ from modules.formater import Title, Footer
 title = "📊 About"
 t = Title().page_config(title)
 
-# import and cleanup
-data_url = 'https://storage.googleapis.com/gsearch_share/gsearch_jobs.csv'
-jobs_all = pd.read_csv(data_url)
-jobs_all.date_time = pd.to_datetime(jobs_all.date_time) # convert to date time
-jobs_all = jobs_all.drop(labels=['Unnamed: 0', 'index'], axis=1, errors='ignore')
-
 st.markdown("## 📊 About")
 st.markdown("### 👨🏼‍💻 Goal")
 st.markdown("""
 Open-sourcing job requirements for aspiring data analysts is necessary for data nerds to focus more efficiently on what skills they need to learn for their future job. This dashboard is only the beginning of that journey. \n 
 """)
-# Thanks for checking this out! 🤙🏼 -Luke
 
 st.markdown("### 🤖 Resources")
 st.markdown(f"""

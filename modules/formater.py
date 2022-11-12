@@ -3,25 +3,10 @@ from htbuilder import HtmlElement, div, ul, li, br, hr, a, p, img, styles, class
 from htbuilder.units import percent, px
 from htbuilder.funcs import rgba, rgb
 
-# class PageTitle:
-#     """"
-#     Update title and favicon of each page
-#     """
-    # def __init__(self):
-    #     self.name = "🛠️ Skills"
-    #     self.img = "images/luke_Favicon.png"
-    
-    # def page_config(self):
-    #     st.set_page_config(page_title=self.title, page_icon=self.icon)
-
-# def page_config():
-#     st.write("hello")
-#     # st.set_page_config(page_title="🛠️ Skills", page_icon="images/luke_Favicon.png")
-
 class Title(object):
     """"
-    Creates a clickable footer image with link
-    source: https://discuss.streamlit.io/t/st-footer/6447
+    Update title and favicon of each page
+    ⚠️ IMPORTANT NOTE: Must call page_config() as first function in script ⚠️ 
     """
     def __init__(self):
 
