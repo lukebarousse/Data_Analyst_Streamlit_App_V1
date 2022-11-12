@@ -68,9 +68,13 @@ if job_type_choice != select_all:
 
 # Skill Filters - top n and languages
 keywords_programming = [
-'sql', 'python', 'r', 'c', 'c#', 'javascript', 'js',  'java', 'scala', 'sas', 'matlab', 'c++', 'c/c++', 'perl', 'go', 'typescript', 'bash', 'html', 
-'css', 'php', 'powershell', 'rust', 'kotlin', 'ruby',  'dart', 'assembly', 'swift', 'vba', 'lua', 'groovy', 'delphi', 'objective-c', 'haskell', 
-'elixir', 'julia', 'clojure', 'solidity', 'lisp', 'f#', 'fortran', 'erlang', 'apl', 'cobol', 'ocaml', 'crystal', 'javascript/typescript', 'golang',]
+'sql', 'python', 'r', 'c', 'c#', 'javascript', 'js',  'java', 'scala', 'sas', 'matlab', 
+'c++', 'c/c++', 'perl', 'go', 'typescript', 'bash', 'html', 'css', 'php', 'powershell', 'rust', 
+'kotlin', 'ruby',  'dart', 'assembly', 'swift', 'vba', 'lua', 'groovy', 'delphi', 'objective-c', 
+'haskell', 'elixir', 'julia', 'clojure', 'solidity', 'lisp', 'f#', 'fortran', 'erlang', 'apl', 
+'cobol', 'ocaml', 'crystal', 'javascript/typescript', 'golang', 'nosql', 'mongodb', 't-sql', 'no-sql',
+'visual_basic', 'pascal', 'mongo', 'pl/sql',  'sass', 'vb.net', 'mssql', 
+]
 skill_all_time = agg_skill_data(jobs_all)
 skill_filter = skill_dict[top_n_choice]
 if keyword_choice != keyword_list[0]:
