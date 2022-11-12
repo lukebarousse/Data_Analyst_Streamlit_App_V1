@@ -8,26 +8,18 @@ from pandas.api.types import (
     is_object_dtype,
 )
 from modules.formater import Title, Footer
+from modules.importer import DataImport
 
 # Title page and footer
 title = "🌎 Explore"
-t = Title().page_config(title)
-f = Footer().footer()
+Title().page_config(title)
+Footer().footer()
 
-# import and cleanup data
-data_url = 'https://storage.googleapis.com/gsearch_share/gsearch_jobs.csv'
-jobs_all = pd.read_csv(data_url)
-# jobs_all.date_time = pd.to_datetime(jobs_all.date_time) # convert to date time
-jobs_all = jobs_all.drop(labels=['Unnamed: 0', 'index'], axis=1, errors='ignore')
+# Import data
+jobs_all = DataImport().fetch_and_clean_data()
 
 st.markdown("## 🌎 Explore the dataset")
 
-with st.sidebar:
-    st.markdown("### Download the data...")
-    st.download_button('Click here', jobs_all.to_csv())
-
-# Create a searchable dataframe
-# source: https://blog.streamlit.io/auto-generate-a-dataframe-filtering-ui-in-streamlit-with-filter_dataframe/
 def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     """
     Adds a UI on top of a dataframe to let viewers filter columns
@@ -37,6 +29,9 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
     Returns:
         pd.DataFrame: Filtered dataframe
+    
+    Source:
+        https://blog.streamlit.io/auto-generate-a-dataframe-filtering-ui-in-streamlit-with-filter_dataframe/
     """
     modify = st.checkbox("Add filters", value=True)
 

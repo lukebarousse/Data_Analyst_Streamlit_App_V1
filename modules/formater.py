@@ -6,7 +6,7 @@ from htbuilder.funcs import rgba, rgb
 class Title(object):
     """"
     Update title and favicon of each page
-    ⚠️ IMPORTANT NOTE: Must call page_config() as first function in script ⚠️ 
+    ⚠️ IMPORTANT: Must call page_config() as first function in script 
     """
     def __init__(self):
 

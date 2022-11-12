@@ -12,7 +12,7 @@ class DataImport:
     def fetch_and_clean_data(_self):
         data_url = 'https://storage.googleapis.com/gsearch_share/gsearch_jobs.csv'
         jobs_data = pd.read_csv(data_url).replace("'","", regex=True)
-        jobs_data.date_time = pd.to_datetime(jobs_data.date_time) # convert to date time
+        jobs_data.date_time = pd.to_datetime(jobs_data.date_time)
         jobs_data = jobs_data.drop(labels=['Unnamed: 0', 'index'], axis=1, errors='ignore')
         jobs_data.description_tokens = jobs_data.description_tokens.str.strip("[]").str.split(",") # fix major formatting issues with tokens
         jobs_data.description_tokens = jobs_data.description_tokens.apply(lambda row: [x.strip(" ") for x in row]) # remove whitespace from tokens

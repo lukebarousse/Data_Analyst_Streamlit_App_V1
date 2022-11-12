@@ -5,7 +5,7 @@ from modules.formater import Title, Footer
 
 # Title page and footer
 title = "📊 About"
-t = Title().page_config(title)
+Title().page_config(title)
 
 st.markdown("## 📊 About")
 st.markdown("### 👨🏼‍💻 Goal")

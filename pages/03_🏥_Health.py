@@ -3,17 +3,15 @@ import pandas as pd
 import numpy as np
 import datetime
 from modules.formater import Title, Footer
+from modules.importer import DataImport
 
 # Title page and footer
 title = "🏥 Health"
-t = Title().page_config(title)
-f = Footer().footer()
+Title().page_config(title)
+Footer().footer()
 
-# import and cleanup
-data_url = 'https://storage.googleapis.com/gsearch_share/gsearch_jobs.csv'
-jobs_all = pd.read_csv(data_url)
-jobs_all.date_time = pd.to_datetime(jobs_all.date_time) # convert to date time
-jobs_all = jobs_all.drop(labels=['Unnamed: 0', 'index'], axis=1, errors='ignore')
+# Import data
+jobs_all = DataImport().fetch_and_clean_data()
 
 # Calculate number jobs repeated
 repeat_jobs = jobs_all.job_id.value_counts()

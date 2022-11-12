@@ -4,26 +4,17 @@ import numpy as np
 import altair as alt
 import datetime
 from modules.formater import Title, Footer
+from modules.importer import DataImport
 
 # Title page and footer
 title = "💸 Salary"
-t = Title().page_config(title)
-f = Footer().footer()
+Title().page_config(title)
+Footer().footer()
 
-# import and cleanup dataframe
-@st.experimental_memo
-def fetch_and_clean_data():
-    data_url = 'https://storage.googleapis.com/gsearch_share/gsearch_jobs.csv'
-    jobs_data = pd.read_csv(data_url).replace("'","", regex=True)
-    jobs_data.date_time = pd.to_datetime(jobs_data.date_time) # convert to date time
-    jobs_data = jobs_data.drop(labels=['Unnamed: 0', 'index'], axis=1, errors='ignore')
-    jobs_data.description_tokens = jobs_data.description_tokens.str.strip("[]").str.split(",")
-
-    # drop rows without salary data
-    jobs_data = jobs_data[jobs_data.salary_avg.notna()] 
-    return jobs_data
-
-jobs_all = fetch_and_clean_data()
+# Import data
+jobs_all = DataImport().fetch_and_clean_data()
+# Drop rows without salary data
+jobs_data = jobs_all[jobs_all.salary_avg.notna()] 
 
 # Skill sort, count, and filter list data
 select_all = "Select All"
@@ -51,7 +42,7 @@ with st.sidebar:
 
 # Top page build
 st.markdown("## 💸 Salary Histogram for Data Analysts")
-salary_dict = {"Standardized": "salary_standardized", "Annual": "salary_yearly", "Hourly": "salary_hourly"}
+salary_dict = {"Annual": "salary_yearly", "Hourly": "salary_hourly", "Standardized": "salary_standardized"}
 salary_choice = st.radio('Salary aggregation:', list(salary_dict.keys()), horizontal=True)
 
 # Side column filter data transform
@@ -89,23 +80,11 @@ try:
         strokeWidth=0
     )
     st.altair_chart(salary_chart, use_container_width=True)
-    st.markdown("#### 💵 Table of Salaries")
-    st.dataframe(salary_df)
-    if salary_choice == list(salary_dict.keys())[0]:
+    display_table = st.checkbox("Show table of salaries below 👇🏼")
+    if display_table:
+        st.markdown("#### 💵 Table of Salaries")
+        st.dataframe(salary_df)
+    if salary_choice == list(salary_dict.keys())[2]:
         st.write("NOTE: 'Standardized' adjusts both 'Annual' and 'Hourly' salary data to a common unit of annual.")
 except:
     st.markdown("# 🙅‍♂️ No results")
-
-# Previous streamlit graph... didn't like look of axis and didn't support histogram
-# range = (np.nanmin(column), np.nanmax(column))
-# hist_values = np.histogram(column, bins=bins, range=range)
-# hist_values = pd.DataFrame(hist_values).fillna(0).transpose()
-# hist_values = hist_values.rename(columns={0: "Count", 1: "Salary ($USD)"})
-# hist_values = hist_values.astype(int)
-# st.bar_chart(data=hist_values, x='Salary ($USD)', y='Count')
-
-# Footer
-# if __name__ == "__main__":
-#     from modules.formater import Footer
-#     f = Footer()
-#     f.footer()
