@@ -1,8 +1,11 @@
 import streamlit as st
 import pandas as pd
 import datetime
+from modules.formater import Title, Footer
 
-st.set_page_config(page_title='📊 About', page_icon = 'images/luke_Favicon.png')
+# Title page and footer
+title = "📊 About"
+t = Title().page_config(title)
 
 # import and cleanup
 data_url = 'https://storage.googleapis.com/gsearch_share/gsearch_jobs.csv'
