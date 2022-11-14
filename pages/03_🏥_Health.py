@@ -37,20 +37,23 @@ jobs_daily = jobs_daily.sort_values(by='Date', ascending=False)
 
 # Calculate average number of job postings a day
 delta_days = (today_date - (first_date - datetime.timedelta(days=2))).days # first day was actually day prior but UTC
-jobs_day = round(len(jobs_all)/delta_days)
-jobs_today = jobs_daily[jobs_daily.Date == datetime.date.today()]
+jobs_day = round(len(jobs_all)/delta_days, 1)
 try:
+    jobs_today = jobs_daily[jobs_daily.Date == datetime.date.today()]
     jobs_today = jobs_today['Job Postings'].fillna(0).iloc[0]
 except IndexError: #Error when coming to new day and no values for new day
-    jobs_today = jobs_daily[jobs_daily.Date == datetime.date.today() - datetime.timedelta(days=1)]
-    jobs_today = jobs_today['Job Postings'].fillna(0).iloc[0]
+    try:
+        jobs_today = jobs_daily[jobs_daily.Date == datetime.date.today() - datetime.timedelta(days=1)]
+        jobs_today = jobs_today['Job Postings'].fillna(0).iloc[0]
+    except:
+        jobs_today = 0 # kept getting index error on live dashboard
 jobs_delta = 100 * (jobs_today - jobs_day) / jobs_day
-jobs_delta = jobs_delta.round(1)
+jobs_delta = round(jobs_delta,1)
 
 # calculate database size yesterday to today
 jobs_yesterday = num_jobs - jobs_today
 jobs_all_delta = ((num_jobs - jobs_yesterday) * 100) / jobs_yesterday
-jobs_all_delta = jobs_all_delta.round(1)
+jobs_all_delta = round(jobs_all_delta,1)
 
 # Date Display:
 update_date = jobs_all.date_time.max()
@@ -61,8 +64,8 @@ update_date = update_date.strftime("%d-%b-%Y")
 st.markdown("## 🏥 Health of Job Data Collection")
 col1, col2, col3 = st.columns(3)
 col1.metric("Jobs Last Updated", update_time, update_date, delta_color="off")
-col2.metric("Jobs Added in Update", jobs_today, f"{jobs_delta}%")
-col3.metric("Size of Jobs Database", num_jobs, f"{jobs_all_delta}%") # Calculate % increase
+col2.metric("Jobs Added Last", jobs_today, f"{jobs_delta}%")
+col3.metric("Jobs Database Size", num_jobs, f"{jobs_all_delta}%") # Calculate % increase
 
 
 st.write(f"#### 📈 Daily job scraping status")
