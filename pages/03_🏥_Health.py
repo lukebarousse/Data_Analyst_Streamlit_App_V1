@@ -27,7 +27,7 @@ num_jobs = len(jobs_all)
 
 # Calculate number of missing dates
 first_date = jobs_all.date_time.dt.date.min()
-today_date = datetime.date.today() - datetime.timedelta(hours=6) # streamlit runs on UTC, showing missing date for next day before collect
+today_date = (datetime.datetime.today() - datetime.timedelta(hours=6)).date() # streamlit runs on UTC, showing missing date for next day before collect
 date_count = pd.DataFrame(jobs_all.date_time.dt.date.value_counts())
 missing_dates = list(pd.date_range(start=first_date, end=today_date).difference(date_count.index))
 
