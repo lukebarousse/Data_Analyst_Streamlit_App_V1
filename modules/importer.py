@@ -8,7 +8,7 @@ class DataImport:
     def __init__(self):
         pass
 
-    @st.experimental_memo(ttl=24*60*60) # ttl - num seconds to keep entry in chache
+    @st.experimental_memo(ttl=60*60) # ttl of one hour to keep memory in cache
     def fetch_and_clean_data(_self):
         data_url = 'https://storage.googleapis.com/gsearch_share/gsearch_jobs.csv'
         jobs_data = pd.read_csv(data_url).replace("'","", regex=True)
