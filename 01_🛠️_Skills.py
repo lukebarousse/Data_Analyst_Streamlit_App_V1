@@ -23,7 +23,7 @@ def agg_skill_data(jobs_df):
 skill_count = agg_skill_data(jobs_all)
 
 # Top page build
-st.markdown("## 🛠️ What is the TOP skill for data analysts?!?")
+st.markdown("## 🛠️ What is the TOP Skill for Data Analysts?!?")
 col1, col2, col3, col4 = st.columns(4)
 with col1:
     keyword_list = ["All Tools", "Languages"]
