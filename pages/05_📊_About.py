@@ -37,6 +37,6 @@ with col2:
     st.write("Dataset with further details")
 
 with col3:
-    st.markdown("### [📺 YouTube](https://www.youtube.com/lukebarousse)")
+    st.markdown("### [📺 YouTube](https://youtu.be/iNEwkaYmPqY)")
     # st.image('images/youtube.png', width=170)   
     st.write("Video about this project")
