@@ -8,8 +8,8 @@ class DataImport:
     def __init__(self):
         pass
 
-    @st.experimental_memo(ttl=60*60) # ttl of one hour to keep memory in cache
-    def fetch_and_clean_data(_self):
+    @st.cache_data(ttl=60*60) # ttl of one hour to keep memory in cache
+    def fetch_and_clean_data():
         data_url = 'https://storage.googleapis.com/gsearch_share/gsearch_jobs.csv'
         jobs_data = pd.read_csv(data_url).replace("'","", regex=True)
         jobs_data.date_time = pd.to_datetime(jobs_data.date_time)
