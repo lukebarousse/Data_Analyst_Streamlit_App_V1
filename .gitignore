@@ -1,4 +1,4 @@
 SerpAPI.psd
 secrets.toml
 env/
-modules/__pycache__
+__pycache__/
