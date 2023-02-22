@@ -13,11 +13,34 @@ f = Footer().footer()
 # Import data
 jobs_all = DataImport().fetch_and_clean_data()
 
+
+# Dictionary for skills and tools mapping, in order to have a correct naming
+keywords_programming_and_skills = {
+    'sql' : 'SQL',  'python' : 'Python',  'r' : 'R',  'c' : 'C', 'c#' : 'C#',  'javascript' : 'JavaScript', 
+    'js' : 'JS', 'java' : 'Java','scala':'Scala','sas':'SAS', 'matlab' : 'MATLAB',
+    'c++' : 'C++', 'c/c++' : 'C / C++', 'perl' : 'Perl','go':'Go','typescript':'TypeScript','bash':'Bash', 'html':'HTML',
+    'css':'CSS', 'php':'PHP','powershell':'Powershell','rust':'Rust','kotlin':'Kotlin','ruby':'Ruby','dart':'Dart',
+    'assembly':'Assembly','swift':'Swift','vba':'VBA', 'lua':'Lua','groovy':'Groovy','delphi':'Delphi',
+    'objective-c':'Objective-C','haskell':'Haskell','elixir':'Elixir','julia':'Julia','clojure':'Clojure',
+    'solidity':'Solidity','lisp':'Lisp','f#':'F#','fortran':'Fortran','erlang':'Erlang','apl':'APL',
+    'cobol':'COBOL', 'ocaml': 'OCaml','crystal':'Crystal','javascript/typescript' : 'JavaScript / TypeScript','golang':'Golang',
+    'nosql': 'No SQL', 'mongodb' : 'MongoDB','t-sql' :'Transact-SQL', 'no-sql' : 'No-SQL','visual_basic' : 'Visual Basic',
+    'pascal':'Pascal', 'mongo' : 'Mongo', 'pl/sql' : 'PL/SQL','sass' :'Sass', 'vb.net' : 'VB.NET','mssql' : 'MSSQL',
+    'airflow' : 'Airflow', 'alteryx' : 'Alteryx','apl' : 'APL', 'asp.net':'ASP.NET', 'atlassian' :'Atlassian','excel': 'Excel',
+    'power_bi' : 'Power BI', 'tableau' : 'Tableau','srss':'SRSS','word':'Word','unix' : 'Unix','vue':'Vue', 'jquery' : 'jQuery',
+    'linux/unix' : 'Linux / Unix','seaborn' :'Seaborn','microstrategy':'MicroStrategy', 'spss':'SPSS','visio':'Visio', 
+    'gdpr':'GDPR', 'ssrs':'SSRS', 'spreadsheet' : 'Spreadsheet', 'aws' : 'AWS', 'hadoop' : 'Hadoop','ssis':'SSIS',
+    'linux' : 'Linux', 'sap' : 'SAP', 'powerpoint' : 'PowerPoint', 'sharepoint' : 'SharePoint', 'redshift' : 'Redshift',
+    'snowflake':'Snowflake', 'qlik' : 'Qlik', 'cognos' : 'Cognos', 'pandas' : 'Pandas', 'spark' : 'Spark', 'outlook' : 'Outlook',
+
+}
+
 # Skill sort, count, and filter list data
 def agg_skill_data(jobs_df):
     skill_data = pd.DataFrame(jobs_df.description_tokens.sum()).value_counts().rename_axis('keywords').reset_index(name='counts')
     skill_data = skill_data[skill_data.keywords != '']
     skill_data['percentage'] = skill_data.counts / len(jobs_df)
+    skill_data['keywords'] = skill_data['keywords'].replace(keywords_programming_and_skills)
     return skill_data
 
 skill_count = agg_skill_data(jobs_all)
@@ -67,18 +90,10 @@ if job_type_choice != select_all:
     jobs_all = jobs_all[jobs_all.schedule_type.apply(lambda x: job_type_choice in str(x))]
 
 # Skill Filters - top n and languages
-keywords_programming = [
-'sql', 'python', 'r', 'c', 'c#', 'javascript', 'js',  'java', 'scala', 'sas', 'matlab', 
-'c++', 'c/c++', 'perl', 'go', 'typescript', 'bash', 'html', 'css', 'php', 'powershell', 'rust', 
-'kotlin', 'ruby',  'dart', 'assembly', 'swift', 'vba', 'lua', 'groovy', 'delphi', 'objective-c', 
-'haskell', 'elixir', 'julia', 'clojure', 'solidity', 'lisp', 'f#', 'fortran', 'erlang', 'apl', 
-'cobol', 'ocaml', 'crystal', 'javascript/typescript', 'golang', 'nosql', 'mongodb', 't-sql', 'no-sql',
-'visual_basic', 'pascal', 'mongo', 'pl/sql',  'sass', 'vb.net', 'mssql', 
-]
 skill_all_time = agg_skill_data(jobs_all)
 skill_filter = skill_dict[top_n_choice]
 if keyword_choice != keyword_list[0]:
-    skill_all_time = skill_all_time[skill_all_time.keywords.isin(keywords_programming)]
+    skill_all_time = skill_all_time[skill_all_time.keywords.isin(list(keywords_programming_and_skills.keys()))]
 skill_all_time = skill_all_time.head(skill_filter)
 skill_all_time_list = list(skill_all_time.keywords)
 
@@ -116,6 +131,7 @@ def agg_skill_daily_data(jobs_df):
         date_agg_df['percentage'] = date_agg_df.counts / len(date_df)
         date_agg_df['date'] = date
         skill_daily_df = pd.concat([date_agg_df, skill_daily_df], ignore_index=True, axis=0)
+        skill_daily_df['keywords'] = skill_daily_df['keywords'].replace(keywords_programming_and_skills)
     return skill_daily_df
 
 skill_daily_data = agg_skill_daily_data(jobs_all)
