@@ -13,37 +13,72 @@ f = Footer().footer()
 # Import data
 jobs_all = DataImport().fetch_and_clean_data()
 
+print(jobs_all.head())
+
 
 # Dictionary for skills and tools mapping, in order to have a correct naming
-keywords_programming_and_skills = {
-    'sql' : 'SQL',  'python' : 'Python',  'r' : 'R',  'c' : 'C', 'c#' : 'C#',  'javascript' : 'JavaScript', 
-    'js' : 'JS', 'java' : 'Java','scala':'Scala','sas':'SAS', 'matlab' : 'MATLAB',
-    'c++' : 'C++', 'c/c++' : 'C / C++', 'perl' : 'Perl','go':'Go','typescript':'TypeScript','bash':'Bash', 'html':'HTML',
-    'css':'CSS', 'php':'PHP','powershell':'Powershell','rust':'Rust','kotlin':'Kotlin','ruby':'Ruby','dart':'Dart',
-    'assembly':'Assembly','swift':'Swift','vba':'VBA', 'lua':'Lua','groovy':'Groovy','delphi':'Delphi',
-    'objective-c':'Objective-C','haskell':'Haskell','elixir':'Elixir','julia':'Julia','clojure':'Clojure',
-    'solidity':'Solidity','lisp':'Lisp','f#':'F#','fortran':'Fortran','erlang':'Erlang','apl':'APL',
-    'cobol':'COBOL', 'ocaml': 'OCaml','crystal':'Crystal','javascript/typescript' : 'JavaScript / TypeScript','golang':'Golang',
+keywords_skills = {
+    'airflow': 'Airflow', 'alteryx': 'Alteryx', 'asp.net': 'ASP.NET', 'atlassian': 'Atlassian', 
+    'excel': 'Excel', 'power_bi': 'Power BI', 'tableau': 'Tableau', 'srss': 'SRSS', 'word': 'Word', 
+    'unix': 'Unix', 'vue': 'Vue', 'jquery': 'jQuery', 'linux/unix': 'Linux / Unix', 'seaborn': 'Seaborn', 
+    'microstrategy': 'MicroStrategy', 'spss': 'SPSS', 'visio': 'Visio', 'gdpr': 'GDPR', 'ssrs': 'SSRS', 
+    'spreadsheet': 'Spreadsheet', 'aws': 'AWS', 'hadoop': 'Hadoop', 'ssis': 'SSIS', 'linux': 'Linux', 
+    'sap': 'SAP', 'powerpoint': 'PowerPoint', 'sharepoint': 'SharePoint', 'redshift': 'Redshift', 
+    'snowflake': 'Snowflake', 'qlik': 'Qlik', 'cognos': 'Cognos', 'pandas': 'Pandas', 'spark': 'Spark', 'outlook': 'Outlook'
+}
+
+keywords_programming = {
+    'sql' : 'SQL', 'python' : 'Python', 'r' : 'R', 'c':'C', 'c#':'C#', 'javascript' : 'JavaScript', 'js':'JS', 'java':'Java', 
+    'scala':'Scala', 'sas' : 'SAS', 'matlab': 'MATLAB', 'c++' : 'C++', 'c/c++' : 'C / C++', 'perl' : 'Perl','go' : 'Go',
+    'typescript' : 'TypeScript','bash':'Bash','html' : 'HTML','css' : 'CSS','php' : 'PHP','powershell' : 'Powershell',
+    'rust' : 'Rust', 'kotlin' : 'Kotlin','ruby' : 'Ruby','dart' : 'Dart','assembly' :'Assembly',
+    'swift' : 'Swift','vba' : 'VBA','lua' : 'Lua','groovy' : 'Groovy','delphi' : 'Delphi','objective-c' : 'Objective-C',
+    'haskell' : 'Haskell','elixir' : 'Elixir','julia' : 'Julia','clojure': 'Clojure','solidity' : 'Solidity',
+    'lisp' : 'Lisp','f#':'F#','fortran' : 'Fortran','erlang' : 'Erlang','apl' : 'APL','cobol' : 'COBOL',
+    'ocaml': 'OCaml','crystal':'Crystal','javascript/typescript' : 'JavaScript / TypeScript','golang':'Golang',
     'nosql': 'No SQL', 'mongodb' : 'MongoDB','t-sql' :'Transact-SQL', 'no-sql' : 'No-SQL','visual_basic' : 'Visual Basic',
     'pascal':'Pascal', 'mongo' : 'Mongo', 'pl/sql' : 'PL/SQL','sass' :'Sass', 'vb.net' : 'VB.NET','mssql' : 'MSSQL',
-    'airflow' : 'Airflow', 'alteryx' : 'Alteryx','apl' : 'APL', 'asp.net':'ASP.NET', 'atlassian' :'Atlassian','excel': 'Excel',
-    'power_bi' : 'Power BI', 'tableau' : 'Tableau','srss':'SRSS','word':'Word','unix' : 'Unix','vue':'Vue', 'jquery' : 'jQuery',
-    'linux/unix' : 'Linux / Unix','seaborn' :'Seaborn','microstrategy':'MicroStrategy', 'spss':'SPSS','visio':'Visio', 
-    'gdpr':'GDPR', 'ssrs':'SSRS', 'spreadsheet' : 'Spreadsheet', 'aws' : 'AWS', 'hadoop' : 'Hadoop','ssis':'SSIS',
-    'linux' : 'Linux', 'sap' : 'SAP', 'powerpoint' : 'PowerPoint', 'sharepoint' : 'SharePoint', 'redshift' : 'Redshift',
-    'snowflake':'Snowflake', 'qlik' : 'Qlik', 'cognos' : 'Cognos', 'pandas' : 'Pandas', 'spark' : 'Spark', 'outlook' : 'Outlook',
-
 }
 
 # Skill sort, count, and filter list data
 def agg_skill_data(jobs_df):
+    keywords_all = {**keywords_skills, **keywords_programming}
+    for index, row in jobs_df.iterrows():
+        for i, token in enumerate(row['description_tokens']):
+            if token.lower() in keywords_all:
+                row['description_tokens'][i] = keywords_all[token.lower()]
+        jobs_df.at[index, 'description_tokens'] = row['description_tokens']
     skill_data = pd.DataFrame(jobs_df.description_tokens.sum()).value_counts().rename_axis('keywords').reset_index(name='counts')
     skill_data = skill_data[skill_data.keywords != '']
     skill_data['percentage'] = skill_data.counts / len(jobs_df)
-    skill_data['keywords'] = skill_data['keywords'].replace(keywords_programming_and_skills)
     return skill_data
 
+
+# Aggregate skills daily
+def agg_skill_daily_data(jobs_df):
+    jobs_df['date'] = jobs_df.date_time.dt.date
+    first_date = jobs_all.date.min()
+    last_date = jobs_all.date.max()
+    list_dates = pd.date_range(first_date,last_date,freq='d')
+    list_dates = pd.DataFrame(list_dates)
+    list_dates = list_dates[0].dt.date
+    skill_daily_df = pd.DataFrame()
+    for date in list_dates:
+        date_df = jobs_df[jobs_df.date == date]
+        if len(date_df) == 0: # throws error if df is blank
+            continue
+        date_agg_df = pd.DataFrame(date_df.description_tokens.sum()).value_counts().rename_axis('keywords').reset_index(name='counts')
+        date_agg_df = date_agg_df[date_agg_df.keywords != '']
+        date_agg_df['percentage'] = date_agg_df.counts / len(date_df)
+        date_agg_df['date'] = date
+        skill_daily_df = pd.concat([date_agg_df, skill_daily_df], ignore_index=True, axis=0)
+    return skill_daily_df
+
+
+
 skill_count = agg_skill_data(jobs_all)
+
+print(skill_count)
 
 # Top page build
 st.markdown("## 🛠️ What is the TOP Skill for Data Analysts?!?")
@@ -93,9 +128,11 @@ if job_type_choice != select_all:
 skill_all_time = agg_skill_data(jobs_all)
 skill_filter = skill_dict[top_n_choice]
 if keyword_choice != keyword_list[0]:
-    skill_all_time = skill_all_time[skill_all_time.keywords.isin(list(keywords_programming_and_skills.keys()))]
+    skill_all_time = skill_all_time[skill_all_time.keywords.isin(list(keywords_programming.values()))]
 skill_all_time = skill_all_time.head(skill_filter)
 skill_all_time_list = list(skill_all_time.keywords)
+
+
 
 # All time line chart
 selector = alt.selection_single(encodings=['x', 'y'])
@@ -112,27 +149,6 @@ all_time_chart = alt.Chart(skill_all_time).mark_bar(
 ).configure_view(
     strokeWidth=0
 )
-
-# Aggregate skills daily
-def agg_skill_daily_data(jobs_df):
-    jobs_df['date'] = jobs_df.date_time.dt.date
-    first_date = jobs_all.date.min()
-    last_date = jobs_all.date.max()
-    list_dates = pd.date_range(first_date,last_date,freq='d')
-    list_dates = pd.DataFrame(list_dates)
-    list_dates = list_dates[0].dt.date
-    skill_daily_df = pd.DataFrame()
-    for date in list_dates:
-        date_df = jobs_df[jobs_df.date == date]
-        if len(date_df) == 0: # throws error if df is blank
-            continue
-        date_agg_df = pd.DataFrame(date_df.description_tokens.sum()).value_counts().rename_axis('keywords').reset_index(name='counts')
-        date_agg_df = date_agg_df[date_agg_df.keywords != '']
-        date_agg_df['percentage'] = date_agg_df.counts / len(date_df)
-        date_agg_df['date'] = date
-        skill_daily_df = pd.concat([date_agg_df, skill_daily_df], ignore_index=True, axis=0)
-        skill_daily_df['keywords'] = skill_daily_df['keywords'].replace(keywords_programming_and_skills)
-    return skill_daily_df
 
 skill_daily_data = agg_skill_daily_data(jobs_all)
 skill_daily_data = skill_daily_data[skill_daily_data.keywords.isin(skill_all_time_list)]
