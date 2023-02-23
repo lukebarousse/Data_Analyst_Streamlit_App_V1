@@ -33,7 +33,7 @@ keywords_programming = {
     'haskell' : 'Haskell','elixir' : 'Elixir','julia' : 'Julia','clojure': 'Clojure','solidity' : 'Solidity',
     'lisp' : 'Lisp','f#':'F#','fortran' : 'Fortran','erlang' : 'Erlang','apl' : 'APL','cobol' : 'COBOL',
     'ocaml': 'OCaml','crystal':'Crystal','javascript/typescript' : 'JavaScript / TypeScript','golang':'Golang',
-    'nosql': 'No SQL', 'mongodb' : 'MongoDB','t-sql' :'Transact-SQL', 'no-sql' : 'No-SQL','visual_basic' : 'Visual Basic',
+    'nosql': 'NoSQL', 'mongodb' : 'MongoDB','t-sql' :'Transact-SQL', 'no-sql' : 'No-SQL','visual_basic' : 'Visual Basic',
     'pascal':'Pascal', 'mongo' : 'Mongo', 'pl/sql' : 'PL/SQL','sass' :'Sass', 'vb.net' : 'VB.NET','mssql' : 'MSSQL',
 }
 
@@ -71,11 +71,9 @@ def agg_skill_daily_data(jobs_df):
         skill_daily_df = pd.concat([date_agg_df, skill_daily_df], ignore_index=True, axis=0)
     return skill_daily_df
 
-
-
 skill_count = agg_skill_data(jobs_all)
 
-print(skill_count)
+# print(skill_count)
 
 # Top page build
 st.markdown("## 🛠️ What is the TOP Skill for Data Analysts?!?")
