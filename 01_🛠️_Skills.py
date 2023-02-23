@@ -13,9 +13,6 @@ f = Footer().footer()
 # Import data
 jobs_all = DataImport().fetch_and_clean_data()
 
-print(jobs_all.head())
-
-
 # Dictionary for skills and tools mapping, in order to have a correct naming
 keywords_skills = {
     'airflow': 'Airflow', 'alteryx': 'Alteryx', 'asp.net': 'ASP.NET', 'atlassian': 'Atlassian', 
